@@ -40,6 +40,11 @@ module GEXF::Attribute::Assignable
     end
   end
 
+  # low level setter, used by GEXF::Document
+  def set_attr_by_id(attr_id, value)
+    @attr_values[attr_id] = value
+  end
+
   def []=(key, value)
     attr  = attribute_by_title(key)
     value = attr && attr.coherce(value) || value

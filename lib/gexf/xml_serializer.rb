@@ -22,7 +22,7 @@ private
   end
 
   def graph_attributes
-    { :default_edge_type => g.edgetype,
+    { :defaultedgetype   => g.defaultedgetype,
       :idtype            => g.idtype,
       :mode              => g.mode }
   end
@@ -31,7 +31,7 @@ private
     %w(nodes edges).each do |type|
       xml.attributes(:class => type.gsub(/s$/,'')) {
         g.send(type).defined_attributes.map do |id, attr| 
-          xml.attr(attr.to_hash)
+          xml.attribute(attr.to_hash)
         end
       }
     end
@@ -46,7 +46,7 @@ private
   end
 
   def build_collection(xml, collection_name, tagname=nil)
-    tagname ||= collection_name.gsub /\s$/,''
+    tagname ||= collection_name.gsub /s$/,''
 
     xml.send(collection_name) do
       g.send(collection_name).each do |item|

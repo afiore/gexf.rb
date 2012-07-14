@@ -10,26 +10,26 @@ class GEXF::Graph
 
   EDGETYPES = GEXF::Edge::TYPES
 
-  attr_reader :edgetype, :idtype, :mode, :nodes, :edges
+  attr_reader :defaultedgetype, :idtype, :mode, :nodes, :edges
 
   def initialize(opts={})
-    edgetype   = opts[:edgetype] || GEXF::Edge::UNDIRECTED
+    edgetype   = opts[:defaultedgetype] || GEXF::Edge::UNDIRECTED
     idtype     = opts[:idtype]   || STRING
     mode       = opts[:mode]     || STATIC
     id_counter = Struct.new(:nodes, :edges, :attributes)
 
-    raise ArgumentError.new "Invalid edgetype: '#{edgetype}'" unless EDGETYPES.include?(edgetype)
+    raise ArgumentError.new "Invalid defaultedgetype: '#{edgetype}'" unless EDGETYPES.include?(edgetype)
     raise ArgumentError.new "Invalid idtype: '#{idtype}'"     unless IDTYPES.include?(idtype)
     raise ArgumentError.new "Invalid mode: '#{mode}'"         unless MODES.include?(mode)
 
-    @edgetype   = edgetype
-    @idtype     = idtype
-    @mode       = mode
-    @id_counter = id_counter.new(0,0,0)
-    @attributes = {}
+    @defaultedgetype = edgetype
+    @idtype          = idtype
+    @mode            = mode
+    @id_counter      = id_counter.new(0,0,0)
+    @attributes      = {}
 
-    @nodes      = GEXF::NodeSet.new
-    @edges      = GEXF::EdgeSet.new
+    @nodes           = GEXF::NodeSet.new
+    @edges           = GEXF::EdgeSet.new
   end
 
   def defined_attributes
@@ -53,7 +53,7 @@ class GEXF::Graph
   end
 
   def create_edge(source, target, opts={})
-    opts[:type]       ||= edgetype
+    opts[:type]       ||= defaultedgetype
     id                = assign_id(:edges, opts.delete(:id))
     @edges << edge    = GEXF::Edge.new(id, source.id, target.id, opts.merge(:graph => self))
     edge

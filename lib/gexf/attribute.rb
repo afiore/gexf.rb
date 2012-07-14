@@ -24,8 +24,14 @@ class GEXF::Attribute
     mode       = opts[:mode]  || STATIC
     type       = opts[:type]  || STRING
     default    = opts[:default]
+    options    = opts[:options]
     id         = id.to_s
-    @options   = Array(opts[:options]).uniq
+
+    @options   = if type == LIST_STRING && options.respond_to?(:split)
+                   options.split('|').uniq
+                 else
+                   Array(options).uniq
+                 end
 
 
     raise ArgumentError.new "Invalid or missing type: #{type}" if !TYPES.include?(type)
@@ -78,6 +84,6 @@ class GEXF::Attribute
     optional[:default] = default if default
     optional[:options] = options.join('|') if options
 
-    {:id => id, :title => title}.merge(optional)
+    {:id => id, :title => title, :type => type}.merge(optional)
   end
 end

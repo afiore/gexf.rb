@@ -21,6 +21,3 @@ g.nodes['node_2'].create_and_connect_to({label:'baz', id: 'node_3'}, {type: GEXF
 
 s = GEXF::XmlSerializer.new(g)
 puts s.serialize!
-
-binding.pry
-

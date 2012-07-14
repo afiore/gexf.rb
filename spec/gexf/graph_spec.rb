@@ -4,7 +4,7 @@ describe GEXF::Graph do
   let(:edgetype) { nil }
   let(:idtype)   { nil }
   let(:mode)     { nil }
-  let(:opts)     {{ :edgetype => edgetype,
+  let(:opts)     {{ :defaultedgetype => edgetype,
                     :idtype   => idtype,
                     :mode     => mode }}
 
@@ -15,7 +15,7 @@ describe GEXF::Graph do
     subject { graph }
 
     context "when params are valid" do
-      its(:edgetype)    { should == GEXF::Edge::UNDIRECTED }
+      its(:defaultedgetype)    { should == GEXF::Edge::UNDIRECTED }
       its(:idtype)      { should == GEXF::Graph::STRING }
       its(:mode)        { should == GEXF::Graph::STATIC }
       its(:nodes)       { should be_empty }
@@ -23,7 +23,7 @@ describe GEXF::Graph do
     end
 
     context "when params are not valid" do
-      [:edgetype, :idtype, :mode].each do |param|
+      [:defaultedgetype, :idtype, :mode].each do |param|
 
         let(param) { :FOO }
 
@@ -144,7 +144,7 @@ describe GEXF::Graph do
 
         GEXF::Edge.should_receive(:new).
                    with('1', source.id, target.id, edge_opts.merge(:graph => graph,
-                                                                   :type  => graph.edgetype)).
+                                                                   :type  => graph.defaultedgetype)).
                    and_return(@edge)
 
         subject.should == @edge
