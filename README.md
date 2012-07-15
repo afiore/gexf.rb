@@ -11,7 +11,7 @@ and the association of data attributes to nodes and edges. I will possibly imple
 
 ## Usage
 
-The following snippet generates a GEXF graph, and defines three node attributes:
+The following snippet initializes a GEXF graph, and defines three node attributes:
 
     require 'rubygems'
     require 'gexf'
