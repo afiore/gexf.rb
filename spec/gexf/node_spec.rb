@@ -102,4 +102,35 @@ describe GEXF::Node do
       subject
     end
   end
+
+  context "incoming/outgoing" do
+    before do
+      @edge1 = double('edge', :source_id => 2332, :target_id => node.id)
+      @edge2 = double('edge', :source_id => node.id, :target_id => 2332)
+
+      @connections = [@edge1, @edge2]
+
+      edges.should_receive(:[]).
+            with(node.id).
+            and_return(@connections)
+    end
+
+    describe "#incoming_connections" do
+
+      subject { node.incoming_connections }
+
+      it "delegates to graph.edges[node.id], having self as target" do
+        subject.should eq([@edge1])
+      end
+    end
+
+    describe "outgoing_connections" do
+
+      subject { node.outgoing_connections }
+
+      it "delegates to graph.edges[node.id], having self as source" do
+        subject.should eq([@edge2])
+      end
+    end
+  end
 end
