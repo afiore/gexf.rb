@@ -1,5 +1,5 @@
 class GEXF::SetOfSets < Set
-  extend Forwardable
+  extend ::Forwardable
   include GEXF::Attribute::Definable
 
   def_delegators :@hash, :empty?

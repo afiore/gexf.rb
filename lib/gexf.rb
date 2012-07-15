@@ -1,16 +1,15 @@
-$LOAD_PATH << File.dirname(__FILE__) + "/gexf/attribute"
-
-module GEXF
-  VERSION = '0.0.1'
-end
+$LOAD_PATH << File.expand_path('../gexf', __FILE__)
 
 require 'nokogiri'
+require 'forwardable'
 require 'set'
 
+module GEXF;end
+
+require 'version'
 require 'attribute'
-require 'definable'
-require 'assignable'
-require 'definable'
+require 'attribute/definable'
+require 'attribute/assignable'
 require 'set_of_sets'
 require 'node'
 require 'nodeset'

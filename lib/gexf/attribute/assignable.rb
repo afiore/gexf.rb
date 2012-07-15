@@ -38,7 +38,7 @@ module GEXF::Attribute::Assignable
     @attr_values ||= {}
   end
 
-  # 
+  #
   # Fetches an attribute by title.
   #
   # Returns the attribute value.
