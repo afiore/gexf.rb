@@ -13,9 +13,10 @@ end
 
 describe GEXF::Attribute::Assignable do
 
-  let(:attribute1)  { double('attribute1', :id => '1', :title => "attribute1") }
-  let(:attribute2)  { double('attribute2', :id => '2', :title => "attribute2") }
-  let(:attribute3)  { double('attribute3', :id => '3', :title => "attribute3") }
+  let(:attribute1)  { double('attribute1', :id => '1', :title => "attribute1", :default => nil) }
+  let(:attribute2)  { double('attribute2', :id => '2', :title => "attribute2", :default => nil) }
+  let(:attribute3)  { double('attribute3', :id => '3', :title => "attribute3", :default => nil) }
+  let(:frog)        { GEXF::Attribute.new(4, 'frog', :default => true, :type => GEXF::Attribute::BOOLEAN) }
 
   let(:attr_values) {{}}
 
@@ -73,11 +74,20 @@ describe GEXF::Attribute::Assignable do
         subject['attribute1'].should be_nil
       end
     end
+
     context "when node/edge has a value" do
       let(:attr_values) {{ '1' => 'foo' }}
 
       it "returns the value" do
         subject[:attribute1].should == 'foo'
+      end
+    end
+
+    context "when attribute has a default value" do
+      let(:attributes) {{ frog.id => frog }}
+
+      it "returns the default value" do
+        subject[:frog].should == true
       end
     end
   end

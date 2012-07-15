@@ -1,33 +1,49 @@
 class GEXF::Document < Nokogiri::XML::SAX::Document
 
-  attr_reader :graph, :graphs
+  attr_reader :graph, :meta
 
   def start_document
-    @graphs           = []
     @graph            = nil
     @node             = nil
     @edge             = nil
     @attr_class       = nil
+    @attr             = nil
     @defined_attrs    = {}
   end
 
   def start_element(tagname, attributes)
-    dispatch(tagname, sanitize_attrs(attributes))
+    @current_tag       = tagname
+    @current_tag_attrs = attributes
+
+    dispatch_event(tagname, sanitize_attrs(attributes))
   end
 
   def end_element(tagname)
     case tagname
     when 'attributes'
       @attr_class     = nil
+    when 'attribute'
+      @attr           = nil
     when 'node'
       @node           = nil
     when 'edge'
       @edge           = nil
     end
+
+    @current_tag_attrs = {}
+    @current_tag       = nil
+  end
+
+  def characters(chars)
+    chars = chars.strip
+    case @current_tag
+    when 'default'
+      @attr.default = chars
+    end
   end
 
 private
-   def dispatch(tagname, attributes)
+   def dispatch_event(tagname, attributes)
      case tagname
      when 'graph'
        on_graph_start(attributes)
@@ -35,12 +51,13 @@ private
        @attr_class = attributes[:class]
      when 'attribute'
        on_attribute_start(attributes)
-     when 'attrvalue'
+     when 'attvalue'
        on_attrvalue_start(attributes)
      when 'node'
        on_node_start(attributes)
      when 'edge'
        on_edge_start(attributes)
+     else
      end
    end
 
@@ -51,7 +68,7 @@ private
    end
 
    def on_graph_start(attributes)
-     @graphs << @graph = GEXF::Graph.new(attributes)
+     @graph = GEXF::Graph.new(attributes)
    end
 
    def on_attribute_start(definition)
@@ -59,14 +76,14 @@ private
      type       = definition[:type]
      definition.delete(:class)
 
-     attr = case @attr_class
+     @attr = case @attr_class
             when 'node'
               graph.define_node_attribute(title, definition)
             when 'edge'
               graph.define_edge_attribute(title, definition)
             end
 
-     @defined_attrs[attr.id] = attr.title
+     @defined_attrs[@attr.id] = @attr.title
    end
 
    def on_node_start(attributes)

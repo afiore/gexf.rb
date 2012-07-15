@@ -16,7 +16,7 @@ class GEXF::Attribute
   EDGE        = :edge
   CLASSES     = [NODE, EDGE]
 
-  attr_reader :type, :id, :title, :options, :mode, :default, :attr_class
+  attr_reader :type, :id, :title, :options, :mode, :attr_class, :default
 
   def initialize(id, title, opts={})
 
@@ -37,7 +37,6 @@ class GEXF::Attribute
     raise ArgumentError.new "Invalid or missing type: #{type}" if !TYPES.include?(type)
     raise ArgumentError.new "invalid or missing class: #{attr_class}" if !CLASSES.include?(attr_class)
     raise ArgumentError.new "Invalid mode: #{mode}" if !MODES.include?(mode)
-    raise ArgumentError.new "Default value '#{default}' is not included in 'options' list" if default && @options.any? && !@options.include?(default)
 
     @attr_class = attr_class
     @type       = type
@@ -45,10 +44,15 @@ class GEXF::Attribute
     @type       = type
     @mode       = mode
     @title      = title.to_s
-    @default    = default
+    self.default=default
   end
 
-  #Note: is this a violation of the "Tell don't ask principle..."?
+  def default=(value)
+    raise ArgumentError.new "value value '#{value}' is not included in 'options' list" if value && @options.any? && !@options.include?(value)
+    @default=value
+  end
+
+  #Note: is this a violation of the "Tell don't ask principle"?
   def coherce(value)
     case @type
     when BOOLEAN
@@ -81,8 +85,7 @@ class GEXF::Attribute
 
   def to_hash
     optional = {}
-    optional[:default] = default if default
-    optional[:options] = options.join('|') if options
+    optional[:options] = options.join('|') if options && options.any?
 
     {:id => id, :title => title, :type => type}.merge(optional)
   end

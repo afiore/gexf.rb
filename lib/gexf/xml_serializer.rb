@@ -29,9 +29,14 @@ private
 
   def build_attributes(xml)
     %w(nodes edges).each do |type|
+      defined_attributes = g.send(type).defined_attributes
+      next if defined_attributes.empty?
+
       xml.attributes(:class => type.gsub(/s$/,'')) {
-        g.send(type).defined_attributes.map do |id, attr| 
-          xml.attribute(attr.to_hash)
+        defined_attributes.map do |id, attr| 
+          xml.attribute(attr.to_hash) {
+            xml.default(attr.default) if attr.default
+          }
         end
       }
     end
@@ -58,9 +63,11 @@ private
   def build_item(xml, item, tagname)
     if item.attr_values.any?
       xml.send(tagname, item.to_hash) do
-        item.attr_values.each do |id, value|
-          value = value.join('|') if value.respond_to?(:join)
-          xml.attrvalue(:for => id, :value => value)
+        xml.attvalues do
+          item.attr_values.each do |id, value|
+            value = value.join('|') if value.respond_to?(:join)
+            xml.attvalue(:for => id, :value => value)
+          end
         end
       end
     else

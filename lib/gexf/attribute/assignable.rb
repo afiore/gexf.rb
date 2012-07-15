@@ -28,19 +28,32 @@ module GEXF::Attribute::Assignable
     end.flatten]
   end
 
+  #
+  # Fetches the attribute hash, and sets it to an empty array if this is not defined.
+  #
+  # Returns the 'attr_values' hash.
+  #
+
   def attr_values
     @attr_values ||= {}
   end
 
+  # 
+  # Fetches an attribute by title.
+  #
+  # Returns the attribute value.
+  # Raises a warning if the attribute has not been defined..
+  #
+
   def [](key)
     if attr = attribute_by_title(key)
-      attr_value(attr.id)
+      attr_value(attr.id) || attr.default
     else
       Kernel.warn "undefined attribute '#{key}'"
     end
   end
 
-  # low level setter, used by GEXF::Document
+  # low level setter, suitable to be used when parsing (see GEXF::Document)
   def set_attr_by_id(attr_id, value)
     @attr_values[attr_id] = value
   end
@@ -62,7 +75,6 @@ private
   end
 
   def attribute_by_title(key)
-    #NOTE: perhaps it is best to just index attributes by title
     _, attribute = *defined_attributes.find { |id, attr| attr.title == key.to_s }
     attribute
   end
