@@ -1,9 +1,9 @@
 # Gexf.rb
 
-A Ruby library for reading, writing, and manipulating graphs expressed in the [GEXF](http://gexf.net) format.
-Currently, this project implements only a subset of the GEXF specs: namely, the definition of a basic graph topology,
-and the association of data attributes to nodes and edges. I will possibly implement the rest of the specification
-(i.e. dynamics, hyrarchy, and Phylogeny) later, as I consolidate the code.
+A Ruby library for generating, parsing, and serializing graphs expressed in the [GEXF](http://gexf.net) format.
+Currently, this project implements only a subset of the GEXF specification: the definition of a basic graph topology,
+and the association of data attributes to nodes and edges. I will possibly implement the rest of the specification later on
+(i.e. dynamics, hyrarchy, and Phylogeny), as I consolidate the code.
 
 ## Installation
 
@@ -11,7 +11,10 @@ and the association of data attributes to nodes and edges. I will possibly imple
 
 ## Usage
 
-The following snippet generates a GEXF graph programmatically:
+The following snippet generates a GEXF graph, and defines three node attributes:
+
+    require 'rubygems'
+    require 'gexf'
 
     graph = GEXF::Graph.new
 
@@ -20,8 +23,8 @@ The following snippet generates a GEXF graph programmatically:
     graph.create_node_attribute(:frog,     :type    => GEXF::Attribute::BOOLEAN,
                                            :default => true)
 
-Attribute values can be associated to nodes or edges by using the same syntax used 
-to access Ruby Hash keys (symbols are automatically converted into strings).
+Attribute values can be associated to nodes or edges by using the same syntax used
+to get/set Ruby Hash keys (symbols are automatically converted into strings).
 
     gephi               = graph.create_node(:label => 'Gephi')
     gephi[:url]         = 'http://gephi.org'
@@ -41,12 +44,12 @@ to access Ruby Hash keys (symbols are automatically converted into strings).
     blab[:frog]         = false
 
 Once associated to a graph, nodes and edges behave as collections,
-implementing most of Ruby's `Enumerable` module's methods:
+implementing and exposing most of Ruby's `Enumerable` module's methods:
 
     graph.nodes.select { |node| !node[:frog] }.map(&:label)
     => 'BarabasiLab'
 
-While instances of Graph do also expose a `create_edge` method, `Node#connect_to` is
+While instances of Graph do also provide a `create_edge` method, `Node#connect_to` is
 often more convenient:
 
     gephi.connect_to(webatlas)
@@ -55,12 +58,12 @@ often more convenient:
     rtgi.connect_to(webatlas)
     gephi.connect_to(blab)
 
-As nodes, edges are also enumerable:
+As it is the case for `graph.nodes`, edges are enumerable:
 
     graph.edges.count
     => 5
 
-The edges collection can be accessed directly from the main graph instance, or
+The set of edges can be accessed from the main graph, but also
 on a per node basis:
 
     webatlas.incoming_connections.map { |edge| edge.source.label }
