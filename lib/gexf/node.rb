@@ -29,8 +29,16 @@ class GEXF::Node
     node
   end
 
-  def connections(type=nil)
-    graph.edges[self.id].to_a
+  def connections
+    graph.edges[id].to_a
+  end
+
+  def incoming_connections
+    connections.select { |edge| edge.target_id == id }
+  end
+
+  def outgoing_connections
+    connections.select { |edge| edge.source_id == id }
   end
 
   def to_hash

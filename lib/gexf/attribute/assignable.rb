@@ -47,7 +47,8 @@ module GEXF::Attribute::Assignable
 
   def [](key)
     if attr = attribute_by_title(key)
-      attr_value(attr.id) || attr.default
+      value = @attr_values[attr.id]
+      !value.nil? ? value : attr.default
     else
       Kernel.warn "undefined attribute '#{key}'"
     end
