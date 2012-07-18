@@ -56,7 +56,7 @@ graph.nodes.select { |node| !node[:frog] }.map(&:label)
 => 'BarabasiLab'
 ````
 
-Edges can be created by calling the `graph.create_edges`, or my coincisely, by calling
+Edges can be created by calling the `graph.create_edges`, or more coincisely, by calling
 connect on the source node.
 
 ````ruby
