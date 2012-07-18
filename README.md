@@ -92,8 +92,10 @@ call the GEXF helper method (which is a shortcat to `GEXF::Document.parse(file)`
 require 'gexf'
 require 'open-uri'
 
-file = File.open('http://gexf.net/data/data.gexf', 'r')
+file  = File.open('http://gexf.net/data/data.gexf', 'r')
 graph = GEXF(file)
+file.close
+
 graph.nodes.count
 => 4
 ````
@@ -104,7 +106,7 @@ A graph object can be easily serialized to XML by just calling:
 
 ````ruby
 graph.to_xml
-=> <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<gexf xmlns='\"http://www.gexf.net/1.2draft' xmlns....>
+=> "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<gexf xmlns='\"http://www.gexf.net/1.2draft' xmlns....>"
 ````
 
 Alternatively, one can obtain the same output by instantiating GEXF::XmlSerializer and calling the `serialize!` method.
