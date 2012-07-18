@@ -120,6 +120,6 @@ serializer.serialize!
 ## Unit tests
 
 Gexf.rb comes with a fairly decent RSpec test suite. The suite can
-be run from project directory issuing the following command:
+be run from the project directory by issuing the following command:
 
     bundle exec spec -f d spec
