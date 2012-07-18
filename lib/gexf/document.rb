@@ -1,5 +1,14 @@
 class GEXF::Document < Nokogiri::XML::SAX::Document
 
+  def self.parse(thing)
+    document = self.new
+
+    ::Nokogiri::XML::SAX::Parser.new(document).
+                                 parse(thing.read)
+    thing.close
+    document.graph
+  end
+
   attr_reader :graph, :meta
 
   def start_document

@@ -19,3 +19,7 @@ require 'graph'
 require 'xml_serializer'
 require 'document'
 require 'support'
+
+def GEXF(thing)
+  GEXF::Document.parse(thing)
+end

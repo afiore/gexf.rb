@@ -169,4 +169,19 @@ describe GEXF::Graph do
       end
     end
   end
+
+  describe "to_xml" do
+    subject { graph.to_xml }
+
+    it "instantiates the XmlSerializer and calls #serialize!" do
+      xml = '...'
+      serializer = mock('serializer', :serialize! => xml)
+
+      GEXF::XmlSerializer.should_receive(:new).
+                          with(graph).
+                          and_return(serializer)
+
+      subject.should eq(xml)
+    end
+  end
 end

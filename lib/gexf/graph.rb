@@ -63,6 +63,11 @@ class GEXF::Graph
     @attributes.dup
   end
 
+  def to_xml
+    serializer = GEXF::XmlSerializer.new(self)
+    serializer.serialize!
+  end
+
 private
   def assign_id(counter_name, id=nil)
     auto_id = @id_counter.send(counter_name) + 1

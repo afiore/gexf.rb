@@ -13,61 +13,107 @@ and the association of data attributes to nodes and edges. I will possibly imple
 
 The following snippet initializes a GEXF graph, and defines three node attributes:
 
-    require 'rubygems'
-    require 'gexf'
+````ruby
+require 'rubygems'
+require 'gexf'
 
-    graph = GEXF::Graph.new
+graph = GEXF::Graph.new
 
-    graph.create_node_attribute(:url)
-    graph.create_node_attribute(:indegree, :type    => GEXF::Attribute::INTEGER)
-    graph.create_node_attribute(:frog,     :type    => GEXF::Attribute::BOOLEAN,
-                                           :default => true)
+graph.create_node_attribute(:url)
+graph.create_node_attribute(:indegree, :type    => GEXF::Attribute::INTEGER)
+graph.create_node_attribute(:frog,     :type    => GEXF::Attribute::BOOLEAN,
+                                       :default => true)
+````
 
 Attribute values can be associated to nodes or edges by using the same syntax used
 to get/set Ruby Hash keys (symbols are automatically converted into strings).
 
-    gephi               = graph.create_node(:label => 'Gephi')
-    gephi[:url]         = 'http://gephi.org'
-    gephi[:indegree]    = 1
+````ruby
+gephi               = graph.create_node(:label => 'Gephi')
+gephi[:url]         = 'http://gephi.org'
+gephi[:indegree]    = 1
 
-    webatlas            = graph.create_node(:label => 'WebAtlas')
-    webatlas[:url]      = 'http://webatlas.fr'
-    webatlas[:indegree] = 2
+webatlas            = graph.create_node(:label => 'WebAtlas')
+webatlas[:url]      = 'http://webatlas.fr'
+webatlas[:indegree] = 2
 
-    rtgi                = graph.create_node(:label => 'RTGI')
-    rtgi[:url]          = 'http://rtgi.fr'
-    rtgi[:indegree]     = 1
+rtgi                = graph.create_node(:label => 'RTGI')
+rtgi[:url]          = 'http://rtgi.fr'
+rtgi[:indegree]     = 1
 
-    blab                = graph.create_node(:label => 'BarabasiLab')
-    blab[:url]          = "http://barabasilab.com"
-    blab[:indegree]     = 1
-    blab[:frog]         = false
+blab                = graph.create_node(:label => 'BarabasiLab')
+blab[:url]          = "http://barabasilab.com"
+blab[:indegree]     = 1
+blab[:frog]         = false
+````
 
 Once associated to a graph, nodes and edges behave as collections,
-implementing and exposing most of Ruby's `Enumerable` module's methods:
+implementing and exposing most of the methods in Ruby's _Enumerable_ module:
 
-    graph.nodes.select { |node| !node[:frog] }.map(&:label)
-    => 'BarabasiLab'
 
-While instances of Graph do also provide a `create_edge` method, `Node#connect_to` is
-often more convenient:
+````ruby
+graph.nodes.select { |node| !node[:frog] }.map(&:label)
+=> 'BarabasiLab'
+````
 
-    gephi.connect_to(webatlas)
-    gephi.connect_to(rtgi)
-    webatlas.connect_to(gephi)
-    rtgi.connect_to(webatlas)
-    gephi.connect_to(blab)
+Edges can be created by calling the `graph.create_edges`, or my coincisely, by calling
+connect on the source node.
 
-As it is the case for `graph.nodes`, edges are enumerable:
+````ruby
+gephi.connect_to(webatlas)
+gephi.connect_to(rtgi)
+webatlas.connect_to(gephi)
+rtgi.connect_to(webatlas)
+gephi.connect_to(blab)
+````
 
-    graph.edges.count
-    => 5
+As it is the case for `graph.nodes`, also edges are enumerable:
 
-The set of edges can be accessed from the main graph, but also
-on a per node basis:
+````ruby
+graph.edges.count
+=> 5
+````
 
-    webatlas.incoming_connections.map { |edge| edge.source.label }
-    => ["Gephi", "RTGI"]
+The complete set of edges can be accessed from the main graph object, or fetched
+on a single node basis:
+
+````ruby
+webatlas.incoming_connections.map { |edge| edge.source.label }
+=> ["Gephi", "RTGI"]
+````
+
+### Parsing a GEXF document
+
+Gexf.rb provides a basic SAX parser which allows to import GEXF documents into a
+graph objects suitable to be queried and manipulated. To parse a GEXF file into a graph, just
+call the GEXF helper method (which is a shortcat to `GEXF::Document.parse(file)`)
+
+````ruby
+require 'gexf'
+require 'open-uri'
+
+file = File.open('http://gexf.net/data/data.gexf', 'r')
+graph = GEXF(file)
+graph.nodes.count
+=> 4
+````
+
+### Exporting a graph into an XML document
+
+A graph object can be easily serialized to XML by just calling:
+
+````ruby
+graph.to_xml
+=> <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<gexf xmlns='\"http://www.gexf.net/1.2draft' xmlns....>
+````
+
+Alternatively, one can obtain the same output by instantiating GEXF::XmlSerializer and calling the `serialize!` method.
+
+````ruby
+serializer = GEXF::XmlSerializer.new(graph)
+serializer.serialize!
+````
+
 
 ## Unit tests
 
