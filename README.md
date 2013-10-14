@@ -19,9 +19,9 @@ require 'gexf'
 
 graph = GEXF::Graph.new
 
-graph.create_node_attribute(:url)
-graph.create_node_attribute(:indegree, :type    => GEXF::Attribute::INTEGER)
-graph.create_node_attribute(:frog,     :type    => GEXF::Attribute::BOOLEAN,
+graph.define_node_attribute(:url)
+graph.define_node_attribute(:indegree, :type    => GEXF::Attribute::INTEGER)
+graph.define_node_attribute(:frog,     :type    => GEXF::Attribute::BOOLEAN,
                                        :default => true)
 ````
 
