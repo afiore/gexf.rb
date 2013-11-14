@@ -1,9 +1,15 @@
 # Gexf.rb
 
+
 A Ruby library for generating, parsing, and serializing graphs expressed in the [GEXF](http://gexf.net) format.
 Currently, this project implements only a subset of the GEXF specification: the definition of a basic graph topology,
 and the association of data attributes to nodes and edges. I will possibly implement the rest of the specification later on
 (i.e. dynamics, hyrarchy, and Phylogeny), as I consolidate the code.
+
+## Notice
+
+This gem is not under active development anymore. However, you are wellcome to
+contribute pull requests, I will do my best to find the time for reviewing and possibly merging them.
 
 ## Installation
 
@@ -123,3 +129,9 @@ Gexf.rb comes with a fairly decent RSpec test suite. The suite can
 be run from the project directory by issuing the following command:
 
     bundle exec spec -f d spec
+
+### Contributors
+
+- Andrea Fiore
+- Erik Doernenburg
+- Thiago Bueno
