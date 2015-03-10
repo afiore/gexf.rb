@@ -72,7 +72,7 @@ private
 
    def sanitize_attrs(attributes)
      Hash[*attributes.flatten].
-       symbolize_keys.
+       symbolize_keys_for_gexf.
        symbolize_graph_types
    end
 
