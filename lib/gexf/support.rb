@@ -4,7 +4,7 @@ GEXF::GRAPH_TYPES = (GEXF::Attribute::TYPES   +
                      GEXF::Graph::MODES).uniq
 
 class Hash
-  def symbolize_keys
+  def symbolize_keys_for_gexf
     hash = {}
     each { |k,v| hash[k.to_sym] = delete(k) }
     merge(hash)
